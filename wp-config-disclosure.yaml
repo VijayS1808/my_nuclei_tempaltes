@@ -26,7 +26,17 @@ http:
       - "{{BaseURL}}/wp-config.php~"
       - "{{BaseURL}}/wp-config.new"
       - "{{BaseURL}}/wp-config.php_"
+      - "{{BaseURL}}/wp-config.php"
+      - "{{BaseURL}}/../../web.config"
+      - "{{BaseURL}}/web.config"
+      - "{{BaseURL}}/wp-config.php-backup"
       - "{{BaseURL}}/http://wp-config.php.save"
+      - "{{BaseURL}}/http://wp-config.php.save"
+      - "{{BaseURL}}/http://wp-config.php.save"
+      - "{{BaseURL}}/http://wp-config.php.save"
+
+
+      
     matchers:
       - type: word
         words:
