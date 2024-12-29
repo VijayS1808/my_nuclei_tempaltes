@@ -1,0 +1,21 @@
+id: wordpress-xmlrpc-file
+
+info:
+  name: WordPress XML-RPC File Detection
+  author: udit_thakkur
+  severity: info
+  description: |
+    Detects the presence of the `xmlrpc.php` file in a WordPress installation. This file is used for remote connections to WordPress sites and can be a target for various attacks like DDoS, brute-force attacks, and others.
+  recommendation: |
+    If XML-RPC functionality is not required, it is recommended to disable or block access to the `xmlrpc.php` file to prevent abuse.
+  reference:
+    - https://wordpress.org/support/article/xml-rpc/
+
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}/xmlrpc.php"
+    matchers:
+      - type: status
+        status:
+          - 405  # Method Not Allowed, indicating the file is present but access is restricted.
