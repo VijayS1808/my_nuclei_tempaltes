@@ -1,0 +1,43 @@
+id: cors-misconfiguration
+
+info:
+  name: CORS Misconfiguration - Detect
+  author: Vijay
+  severity: medium
+  description: |
+    Detects Cross-Origin Resource Sharing (CORS) misconfigurations that allow requests from arbitrary or unauthorized origins, potentially leading to sensitive data exposure.
+  remediation: Restrict CORS policy to only allow trusted origins, and avoid using wildcards or dynamically reflecting origins in responses.
+  classification:
+    cwe-id: CWE-942
+  metadata:
+    max-request: 10
+  tags: cors,misconfiguration,security
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+    headers:
+      Origin: "https://evil.com"
+
+    stop-at-first-match: true
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "Access-Control-Allow-Origin: https://evil.com"
+        part: header
+
+      - type: status
+        status:
+          - 200
+
+    extractors:
+      - type: regex
+        part: header
+        group: 1
+        regex:
+          - "Access-Control-Allow-Origin: (.*)"
+
+# digest: <calculated-digest-here>
