@@ -1,0 +1,26 @@
+id: exposed-svn
+
+info:
+  name: Exposed SVN Directory Detection
+  author: udit_thakkur & dwisiswant0
+  severity: medium
+  description: |
+    Detects the exposure of Subversion (SVN) repository directories, such as `.svn/entries` and `.svn/prop-base/`. Exposing SVN directories can lead to sensitive version control information being publicly accessible, including repository paths, revision history, and commit details.
+  recommendation: |
+    It is recommended to restrict access to `.svn/` directories through server configuration (e.g., Apache, Nginx) to prevent unauthorized access to version control metadata.
+
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}/.svn/entries"
+      - "{{BaseURL}}/.svn/prop-base/"
+      - "{{BaseURL}}/.svn/text-base/"
+    matchers-condition: and
+    matchers:
+      - type: regex
+        part: body
+        regex:
+          - "(^10\\s*dir|\\.svn-base|has-props|svn:\\/\\/|([\\da-f]{32}[\\S+\\r\\n\\s]+[\\d]{4}-[\\d]{2}-[\\d]{2}T[\\d]{2}:[\\d]{2}:[\\d]{2}.[\\d]{6}Z))"
+      - type: status
+        status:
+          - 200
