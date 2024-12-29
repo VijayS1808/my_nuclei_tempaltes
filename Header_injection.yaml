@@ -1,0 +1,24 @@
+id: host-header-injection
+
+info:
+  name: Host Header Injection via X-Forwarded-Host
+  author: melbadry9
+  severity: low
+  description: |
+    Detects Host Header Injection vulnerabilities where an application improperly handles the `X-Forwarded-Host` header. This can lead to potential issues such as web cache poisoning, bypassing security mechanisms, and phishing.
+  remediation: |
+    Validate and sanitize the `Host` and `X-Forwarded-Host` headers. Ensure only trusted values are accepted and consider whitelisting allowed domains or rejecting invalid headers.
+  reference:
+    - https://owasp.org/www-community/vulnerabilities/Unvalidated_Redirects_and_Forwards
+
+requests:
+  - method: GET
+    headers:
+      X-Forwarded-Host: "0021e78f48fe6525798294b7711c6f72.com"
+    path:
+      - "{{BaseURL}}/"
+    matchers:
+      - type: word
+        words:
+          - "0021e78f48fe6525798294b7711c6f72"
+        part: body
