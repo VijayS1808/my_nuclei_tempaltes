@@ -1,0 +1,84 @@
+id: api-endpoints
+
+info:
+  name: Common API Endpoints
+  author: panch0r3d
+  severity: info
+  description: |
+    This template detects common API endpoints that might be publicly exposed. Identifying such endpoints is crucial for securing the application by ensuring sensitive data or functionality is not exposed unintentionally.
+  remediation: Ensure API endpoints are properly secured, restrict access, and only expose necessary data. Apply authentication and authorization checks for sensitive endpoints.
+  classification:
+    cwe-id: CWE-200
+  metadata:
+    max-request: 25
+  tags: api, security, endpoints
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}{{paths}}"
+    payloads:
+      paths:
+        - "/server/api/admin"
+        - "/api/v1"
+        - "/api/v2"
+        - "/api/v3"
+        - "/api/v4"
+        - "/api/v5"
+        - "/api/v1/users"
+        - "/api/v2/users"
+        - "/api/v3/users"
+        - "/api/v4/users"
+        - "/api/v5/users"
+        - "/api/v1/orders"
+        - "/api/v2/orders"
+        - "/api/v3/orders"
+        - "/api/v4/orders"
+        - "/api/v5/orders"
+        - "/api/v1/config"
+        - "/api/v2/config"
+        - "/api/v3/config"
+        - "/api/v4/config"
+        - "/api/v5/config"
+        - "/api/v1/webhooks"
+        - "/api/v2/webhooks"
+        - "/api/v3/webhooks"
+        - "/api/v4/webhooks"
+        - "/api/v5/webhooks"
+        - "/api/v1/health"
+        - "/api/v2/health"
+        - "/api/v3/health"
+        - "/api/v4/health"
+        - "/api/v5/health"
+        - "/api/v1/accounts"
+        - "/api/v2/accounts"
+        - "/api/v3/accounts"
+        - "/api/v4/accounts"
+        - "/api/v5/accounts"
+        - "/api/health"
+        - "/api/config"
+        - "/api/users"
+        - "/api/orders"
+        - "/api/webhooks"
+        - "/api/accounts"
+        - "/api/admin"
+        - "/api/account/metadata/"
+        - "/rest/api/health"
+        - "/rest/api/config"
+        - "/rest/api/users"
+        - "/rest/api/orders"
+        - "/rest/api/webhooks"
+        - "/docs"
+    stop-at-first-match: true
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+          - 405
+          - 500
+          - 403
+      - type: word
+        words:
+          - "Content-Type: application/json"
+        part: header
