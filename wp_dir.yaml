@@ -1,0 +1,23 @@
+id: generic-directory-listing
+
+info:
+  name: Generic Directory Listing
+  author: Vijay
+  severity: info
+  tags: directory-listing, generic
+
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}/files/"
+      - "{{BaseURL}}/assets/"
+      - "{{BaseURL}}/docs/"
+      - "{{BaseURL}}/private/"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - Index of
