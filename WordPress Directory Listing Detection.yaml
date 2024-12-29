@@ -1,0 +1,26 @@
+id: wordpress-directory-listing
+
+info:
+  name: WordPress Directory Listing Detection
+  author: Manas_Harsh
+  severity: info
+  description: |
+    Detects the presence of an open directory listing in the `/wp-content/uploads/` directory of a WordPress site. Open directory listings can reveal sensitive files and metadata to unauthorized users.
+  recommendation: |
+    If directory listing is not required, it is highly recommended to disable it by configuring the web server (e.g., Apache, Nginx) to prevent exposing file structures.
+  reference:
+    - https://www.acunetix.com/websitesecurity/directory-listing/
+
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}/wp-content/uploads/"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200  # The directory is accessible.
+      - type: word
+        words:
+          - "Index of /wp-content/uploads"  # Indicates the directory listing page.
+
